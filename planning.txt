@@ -1,0 +1,9 @@
+Money Manager
+Goals: Allow the user to create an initial profile where you can input all values like current hourly rate, hours worked per week, tax rate, and expenses to figure out how much money will be left over after all expenses
+
+Requirements: A file to be written to and then read afterwards so that info does not have to be reentered every time
+              Allow for an initial file to be made, updated without full deletion, and completely restarted
+
+Formula: 
+    (HoursWorkedPerMonth*HourlyRate*TaxRate) - ExpensesPerMonth
+                
