@@ -10,13 +10,29 @@ void startup();
 int selectionScreen();
 void printSelection(int choice);
 std::ofstream outputFile;
-void createNewAccount(std::ofstream outputFile);
+std::ifstream inputFile;
+void createNewAccount();
+void readAccount();
+void printInfo();
+void printOutro();
+void updateAccount();
+ 
+
+double hourlyRate = 0;
+double monthlyHours = 0;
+double taxRate = 0;
+double monthlyExpenses = 0;
+
 int main()
 {
     int choice;
     startup();
     choice = selectionScreen();
+    if (choice == 4) {
+        return 0;
+    }
     
+    printOutro();
     return 0;
 }
 
@@ -36,21 +52,26 @@ int selectionScreen() {
     std::cout << '\t' << "4: Exit Program" << "\n";
     std::cout << '\t' << "Choice: ";
     std::cin >> choice;
+    std::cout << '\n';
+    std::cout << '\t';
 
     printSelection(choice);
     switch (choice)
     {
     case 1:
-        createNewAccount(outputFile);
+        createNewAccount();
+        printInfo();
         break;
     case 2:
-        //UpdateAccount();
+        updateAccount();
+        printInfo();
         break;
     case 3:
-        //Continue();
+        readAccount();
+        printInfo();
         break;
     case 4:
-        return 1;
+        return 4;
     }
    
 
@@ -80,11 +101,11 @@ void printSelection(int choice) {
 }
 
 
-void createNewAccount(std::ofstream outputFile) {
-    double hourlyRate = 0;
-    double monthlyHours = 0;
-    double taxRate = 0;
-    double monthlyExpenses = 0;
+void createNewAccount() {
+     hourlyRate = 0;
+     monthlyHours = 0;
+     taxRate = 0;
+     monthlyExpenses = 0;
     
     std::cout << '\n' << '\t' << "Enter the following information:" << '\n';
     std::cout << "Hourly income rate: ";
@@ -93,7 +114,7 @@ void createNewAccount(std::ofstream outputFile) {
     std::cin >> monthlyHours;
     std::cout << "Estimated tax rate: ";
     std::cin >> taxRate;
-    std::cout << "Total Monthly expenses";
+    std::cout << "Total Monthly expenses: ";
     std::cin >> monthlyExpenses;
     outputFile.open("accountInfo.txt");
     
@@ -107,8 +128,72 @@ void createNewAccount(std::ofstream outputFile) {
         outputFile.close();
     }
     else {
-        std::cout << '\n' << "Error occurred in opening the file";
+        std::cout << '\n' << "!!!Error occurred in opening the file!!!";
     }
 
 
+}
+
+void readAccount() {
+    inputFile.open("accountInfo.txt");
+    std::string line;
+    if (inputFile.is_open()) {
+        std::getline(inputFile, line);
+        hourlyRate = std::stod(line);
+        std::getline(inputFile, line);
+        monthlyHours = std::stod(line);
+        std::getline(inputFile, line);
+        taxRate = std::stod(line);
+        std::getline(inputFile, line);
+        monthlyExpenses = std::stod(line);
+
+
+            
+    }
+    else {
+        std::cout << '\n' << "!!!Error occurred in opening the file!!!";
+    }
+}
+
+void printInfo() {
+    std::cout << '\n' << '\t' << " Your hourly rate is: " << hourlyRate;
+    std::cout << '\n' << '\t' << " Your total hours worked per month is: " << monthlyHours;
+    std::cout << '\n' << '\t' << " Your tax rate is: " << taxRate;
+    std::cout << '\n' << '\t' << " Your monthly expenses are: " << monthlyExpenses;
+    std::cout << '\n' << '\t' << " Your total income for the month is: " << hourlyRate * monthlyHours * taxRate;
+    std::cout << '\n' << '\t' << " After paying your monthly expenses, you will be left with: $" << (hourlyRate * monthlyHours * taxRate) - monthlyExpenses;
+    std::cout << '\n';
+}
+
+void updateAccount() {
+    readAccount();
+    printInfo();
+    std::cout << '\n' << '\t' << "Set your new hourly rate: ";
+    std::cin >> hourlyRate;
+    std::cout << '\n' << '\t' << "Set your new hours per month: ";
+    std::cin >> monthlyHours;
+    std::cout << '\n' << '\t' << "Set your new tax rate: ";
+    std::cin >> taxRate;
+    std::cout << '\n' << '\t' << "Set your new monthly expenses: ";
+    std::cin >> monthlyExpenses;
+    outputFile.open("accountInfo.txt");
+
+
+
+    if (outputFile.is_open()) {
+        outputFile << hourlyRate << "\n";
+        outputFile << monthlyHours << "\n";
+        outputFile << taxRate << "\n";
+        outputFile << monthlyExpenses << "\n";
+        outputFile.close();
+    }
+    else {
+        std::cout << '\n' << "!!!Error occurred in opening the file!!!";
+    }
+}
+
+void printOutro() {
+    int temp;
+    std::cout << "\n" << "\t\t\t\t" << "E N D  O F  P R O G R A M ";
+    std::cin >> temp;
 }
